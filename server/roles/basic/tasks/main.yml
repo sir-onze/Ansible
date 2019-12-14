@@ -7,7 +7,10 @@
 - name: "Instalação do ufw"
   apt: pkg=ufw state=latest
 
-- name: "Adicionar um file"
+- name: "Instalação do apache2"
+  apt: pkg=apache2 state=latest
+
+- name: "Adicionar um file de teste"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/apache2.conf dest=/home/tiago96baptista/teste owner=root group=root mode=0666
 
 - name: "Clone do repositorio do hotCRP"
@@ -15,3 +18,22 @@
     repo: 'https://github.com/kohler/hotcrp.git'
     dest:  /var/www/hotcrp
     update: no
+
+- name: "Adicionar o file apache.conf devidamente configurado"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/apache2.conf dest=/etc/apache2 owner=root group=root mode=0666
+
+- name: "Adicionar o file 000-default.conf devidamente configurado"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/sites-available/000-default.conf dest=/etc/apache2/sites-available owner=root group=root mode=0666
+
+- name: "Adicionar o file default-ssl.conf devidamente configurado"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/sites-available/default-ssl.conf dest=/etc/apache2/sites-available owner=root group=root mode=0666
+
+- name: "Adicionar o file para o dominio do hotcrp devidamente configurado"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/sites-available/hotcrp.dev.conf dest=/etc/apache2/sites-available owner=root group=root mode=0666
+
+- name: "Adicionar o file hosts para permitir o acesso pelo ip da máquina"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/hosts dest=/etc owner=root group=root mode=0666
+
+- name: Ir para a pasta dos sites-available
+  command: chdir=/etc/apache2/sites-available a2ensite hotcrp.dev.conf
+
