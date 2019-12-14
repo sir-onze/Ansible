@@ -1,0 +1,17 @@
+- name: "Instalação do vim"
+  apt: pkg=vim state=latest
+
+- name: "Instalação do git"
+  apt: pkg=git state=latest
+
+- name: "Instalação do ufw"
+  apt: pkg=ufw state=latest
+
+- name: "Adicionar um file"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/apache2.conf dest=/home/tiago96baptista/teste owner=root group=root mode=0666
+
+- name: "Clone do repositorio do hotCRP"
+  git:
+    repo: 'https://github.com/kohler/hotcrp.git'
+    dest:  /var/www/hotcrp
+    update: no
