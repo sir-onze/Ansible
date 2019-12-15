@@ -1,0 +1,41 @@
+- name: "Instalação do git"
+  apt: pkg=git state=latest
+
+- name: "Instalação do ufw"
+  apt: pkg=ufw state=latest
+
+- name: "Clone do repositorio do hotCRP"
+  git:
+    repo: 'https://github.com/kohler/hotcrp.git'
+    dest:  /home/tiago96baptista/hotcrp
+    update: no
+
+- name: "Instalação do mySQL-server"
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - python-mysqldb
+    - mysql-server
+
+- name: "Começar o MySQL service"
+  action: service name=mysql state=started
+
+- name: "Criar a base de dados com o nome hotcrp'"
+  mysql_db:
+    name: hotcrp
+    state: present
+
+- mysql_user:
+    name: hotcrp
+    password: hotcrp
+    priv: '*.*:ALL'
+    state: present
+    become: yes
+
+
+- name: Import DB 
+  shell: mysql hotcrp < dump.sql /home/tiago96baptista/hotcrp/src/schema.sql
+
+
+- name: "Adicionar o file das configs da base de dados"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/configs/mysqld.cnf dest=/etc/mysql/mysql.conf.d owner=root group=root mode=0666

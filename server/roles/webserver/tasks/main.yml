@@ -34,6 +34,11 @@
 - name: "Adicionar o file hosts para permitir o acesso pelo ip da máquina"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/hosts dest=/etc owner=root group=root mode=0666
 
-- name: "Ir para a pasta dos sites-available"
+- name: "Ir para a pasta dos sites-available e efetuar o link "
   command: chdir=/etc/apache2/sites-available a2ensite hotcrp.dev.conf
 
+- name: "Adicionar o ficheiro com as opções da base de dados configurado"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/options.php dest=/var/www/hotcrp/conf owner=root group=root mode=0666
+
+- name: "Restart do apache2 para aplicar as configurações"
+  service: name=apache2 state=restarted
