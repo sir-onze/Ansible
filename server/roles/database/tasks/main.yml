@@ -34,7 +34,7 @@
 
 
 - name: Import DB 
-  shell: mysql hotcrp < dump.sql /home/tiago96baptista/hotcrp/src/schema.sql
+  shell: mysql hotcrp < /home/tiago96baptista/hotcrp/src/schema.sql
 
 
 - name: "Adicionar o file das configs da base de dados"
