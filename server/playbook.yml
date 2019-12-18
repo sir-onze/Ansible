@@ -1,10 +1,10 @@
 ---
-- hosts: 35.197.195.113
+- hosts: 35.246.70.111
   become: true
   roles:
   - webserver
 
-- hosts: 35.246.70.111 
+- hosts: 35.197.195.113
   become: true
   roles:
   - database

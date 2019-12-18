@@ -17,25 +17,34 @@
     - python-mysqldb
     - mysql-server
 
+- name: "Adicionar o file das configs da base de dados"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/mysqld.cnf dest=/etc/mysql/mysql.conf.d owner=root group=root mode=0666
+
 - name: "Começar o MySQL service"
   action: service name=mysql state=started
 
-- name: "Criar a base de dados com o nome hotcrp'"
-  mysql_db:
-    name: hotcrp
-    state: present
-
-- mysql_user:
+- name: " Criar um user" 
+  mysql_user:
     name: hotcrp
     password: hotcrp
     priv: '*.*:ALL'
     state: present
-    become: yes
+    host: 35.246.70.111
 
+- name: "restart mysql"
+  service: name=mysql
+           enabled=yes
+           state=restarted
+
+- name: " Criar a base de dados" 
+  mysql_db:
+    name: hotcrp
+    login_user: hotcrp
+    login_host: 35.197.195.113 
+    login_password: "hotcrp"
 
 - name: Import DB 
   shell: mysql hotcrp < /home/tiago96baptista/hotcrp/src/schema.sql
 
 
-- name: "Adicionar o file das configs da base de dados"
-  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/configs/mysqld.cnf dest=/etc/mysql/mysql.conf.d owner=root group=root mode=0666
+

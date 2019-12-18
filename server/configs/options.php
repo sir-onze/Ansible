@@ -167,7 +167,7 @@ $Opt["safePasswords"] = 2;
 //   disableCapabilities If set, emails to authors will not have a
 //                   token enabling them to view their papers without logging in.
 $Opt["smartScoreCompare"] = true;
-$Opt["dbHost"] = "35.246.70.111" ;
+$Opt["dbHost"] = "35.197.195.113" ;
 // SESSIONS AND SECURITY
 //
 //   sessionName     Internal name used to distinguish conference sessions

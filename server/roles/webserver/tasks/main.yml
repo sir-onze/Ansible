@@ -4,9 +4,6 @@
 - name: "Instalação do git"
   apt: pkg=git state=latest
 
-- name: "Instalação do ufw"
-  apt: pkg=ufw state=latest
-
 - name: "Instalação do apache2"
   apt: pkg=apache2 state=latest
 
