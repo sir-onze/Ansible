@@ -1,14 +1,13 @@
 - name: "Instalação do git"
   apt: pkg=git state=latest
-
-- name: "Instalação do ufw"
-  apt: pkg=ufw state=latest
+  tags: database
 
 - name: "Clone do repositorio do hotCRP"
   git:
     repo: 'https://github.com/kohler/hotcrp.git'
-    dest:  /home/tiago96baptista/hotcrp
+    dest:  /home/macz/hotcrp
     update: no
+  tags: database
 
 - name: "Instalação do mySQL-server"
   apt:
@@ -16,35 +15,55 @@
   with_items:
     - python-mysqldb
     - mysql-server
+  tags: database
 
 - name: "Adicionar o file das configs da base de dados"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/mysqld.cnf dest=/etc/mysql/mysql.conf.d owner=root group=root mode=0666
+  tags: database
+
+- name: "Adicionar o script dos mysqld para permitir o acesso pelo ip da máquina"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/mysqld_cnf.py dest=/home/macz owner=root group=root mode=0666
+  tags: database
+
+- name: "Correr o script para buscar o ip interno" 
+  shell: |
+    curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip > ip.txt
+  tags: database
+
+- name: "Correr o script python" 
+  shell: python mysqld_cnf.py 
+  tags: database
 
 - name: "Começar o MySQL service"
   action: service name=mysql state=started
+  tags: database
 
-- name: " Criar um user" 
+- name: "Criar um user" 
   mysql_user:
     name: hotcrp
     password: hotcrp
     priv: '*.*:ALL'
     state: present
-    host: 35.246.70.111
+    host: "{{ address_back[0]}}" 
+  tags: database
 
 - name: "restart mysql"
   service: name=mysql
            enabled=yes
            state=restarted
+  tags: database
 
 - name: " Criar a base de dados" 
   mysql_db:
     name: hotcrp
     login_user: hotcrp
-    login_host: 35.197.195.113 
+    login_host: "{{ address_data[0] }}"
     login_password: "hotcrp"
+  tags: database
 
 - name: Import DB 
-  shell: mysql hotcrp < /home/tiago96baptista/hotcrp/src/schema.sql
+  shell: mysql hotcrp < /home/macz/hotcrp/src/schema.sql
+  tags: database
 
 
 

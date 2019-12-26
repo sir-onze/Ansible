@@ -1,41 +1,94 @@
 - name: "Instalação do vim"
   apt: pkg=vim state=latest
+  tags: app
+
+#- name: Install PHP CLI
+ # apt: pkg=libapache2-mod-php state=latest
+
+#- name: Install PHP CLI
+ # apt: pkg=php state=latest
+
+#- name: Install PHP CLI
+ # apt: pkg=php-fpm state=latest
+
+#- name: Install PHP CLI
+ # apt: pkg=php-gmp state=latest
+
+#- name: Install PHP CLI
+ # apt: pkg=php-intl state=latest
 
 - name: "Instalação do git"
   apt: pkg=git state=latest
+  tags: app
+
+- name: "Instalação do git"
+  apt: pkg=python state=latest
+  tags: app
 
 - name: "Instalação do apache2"
   apt: pkg=apache2 state=latest
+  tags: app
 
 - name: "Adicionar um file de teste"
-  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/apache2.conf dest=/home/tiago96baptista/teste owner=root group=root mode=0666
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/apache2.conf dest=/home/macz/teste owner=root group=root mode=0666
+  tags: app
 
 - name: "Clone do repositorio do hotCRP"
   git:
     repo: 'https://github.com/kohler/hotcrp.git'
     dest:  /var/www/hotcrp
     update: no
+  tags: app
 
 - name: "Adicionar o file apache.conf devidamente configurado"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/apache2.conf dest=/etc/apache2 owner=root group=root mode=0666
+  tags: app
 
 - name: "Adicionar o file 000-default.conf devidamente configurado"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/sites-available/000-default.conf dest=/etc/apache2/sites-available owner=root group=root mode=0666
+  tags: app
 
 - name: "Adicionar o file default-ssl.conf devidamente configurado"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/sites-available/default-ssl.conf dest=/etc/apache2/sites-available owner=root group=root mode=0666
+  tags: app
 
 - name: "Adicionar o file para o dominio do hotcrp devidamente configurado"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/apache_files/sites-available/hotcrp.dev.conf dest=/etc/apache2/sites-available owner=root group=root mode=0666
+  tags: app
 
 - name: "Adicionar o file hosts para permitir o acesso pelo ip da máquina"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/hosts dest=/etc owner=root group=root mode=0666
+  tags: app
+
+- name: "Adicionar o script dos hosts para permitir o acesso pelo ip da máquina"
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/hosts.py dest=/home/macz owner=root group=root mode=0666
+  tags: app
+
+- name: "Correr o script para buscar o ip externo" 
+  shell: |
+    curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip > ip.txt
+  tags: app
+
+- name: "Correr o script python" 
+  shell: python hosts.py 
+  tags: app
 
 - name: "Ir para a pasta dos sites-available e efetuar o link "
   command: chdir=/etc/apache2/sites-available a2ensite hotcrp.dev.conf
+  tags: app
 
 - name: "Adicionar o ficheiro com as opções da base de dados configurado"
   copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/options.php dest=/var/www/hotcrp/conf owner=root group=root mode=0666
+  tags: app
+
+- name: "Adicionar o script das options do hotcrp "
+  copy: src=/Users/macz/Desktop/4ano/SDB/Ansible/server/configs/options_php.py dest=/home/macz owner=root group=root mode=0666
+  tags: app
+
+- name: "Correr o script python" 
+  shell: python options_php.py "{{ address_data[0] }}" 
+  tags: app
 
 - name: "Restart do apache2 para aplicar as configurações"
   service: name=apache2 state=restarted
+  tags: app

@@ -1,0 +1,25 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - role: gcp
+      vars:
+        gcp_zone: europe-west2-c
+        gcp_region: europe-west2
+        gcp_project: hotcrp
+        gcp_cred_kind: serviceaccount
+        gcp_cred_file: /Users/macz/Desktop/4ano/SDB/Ansible/testes/hotcrp-a82f5c49281d.json
+        gcp_machine_type: n1-standard-2
+        source_image: projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts
+        disk_size: 12
+        disks:
+          - disk-01
+          - disk-02
+        addresses:
+          - addr-01
+          - addr-02
+        instances:
+          - { index: 1, number: 1, tag: app }
+          - { index: 2, number: 2,tag: database }

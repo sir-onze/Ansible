@@ -1,0 +1,16 @@
+plugin: gcp_compute
+projects:
+  - hotcrp
+zones:
+  - europe-west2-c
+filters:
+  # - machineType = n1-standard-1
+  # - name = rribeiro-*
+
+keyed_groups:
+  - prefix: ''
+    separator: ''
+    key: tags['items']
+
+auth_kind: serviceaccount
+service_account_file: /Users/macz/Desktop/4ano/SDB/Ansible/server//Users/macz/Desktop/4ano/SDB/Ansible/server/hotcrp-30eb17bf7116.json
